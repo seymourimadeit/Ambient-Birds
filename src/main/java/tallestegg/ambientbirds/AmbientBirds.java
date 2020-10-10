@@ -18,7 +18,7 @@ import tallestegg.ambientbirds.renderer.BirdRenderer;
 
 @Mod(AmbientBirds.MODID)
 public class AmbientBirds {
-    public static final String MODID = "ambientbirds";
+    public static final String MODID = "flockingbirds";
 
     public AmbientBirds() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);

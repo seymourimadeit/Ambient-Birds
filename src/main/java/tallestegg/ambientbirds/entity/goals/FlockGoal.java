@@ -1,63 +1,68 @@
 package tallestegg.ambientbirds.entity.goals;
 
 import java.util.List;
+import java.util.function.Predicate;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.vector.Vector3d;
 import tallestegg.ambientbirds.entity.BirdEntity;
 
 public class FlockGoal extends Goal {
     private final BirdEntity taskOwner;
-    private BirdEntity guardtofollow;
-    private double x;
-    private double y;
-    private double z;
+    private int navigateTimer;
+    private int field_222740_c;
 
     public FlockGoal(BirdEntity taskOwnerIn) {
         this.taskOwner = taskOwnerIn;
+        this.field_222740_c = this.func_212825_a(taskOwnerIn);
     }
 
+    protected int func_212825_a(BirdEntity taskOwnerIn) {
+        return 200 + taskOwnerIn.getRNG().nextInt(200) % 20;
+    }
+
+    @Override
     public boolean shouldExecute() {
-        List<BirdEntity> list = this.taskOwner.world.getEntitiesWithinAABB(this.taskOwner.getClass(), this.taskOwner.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-        if (!list.isEmpty()) {
-            for (BirdEntity guard : list) {
-                if (!guard.isInvisible() && guard.isFlockLeader() && !this.taskOwner.isFlockLeader() && this.taskOwner.world.getTargettableEntitiesWithinAABB(BirdEntity.class, (new EntityPredicate()).setDistance(3.0D), guard, this.taskOwner.getBoundingBox().grow(5.0D)).size() < 5) {
-                    this.guardtofollow = guard;
-                    Vector3d vec3d = this.getPosition();
-                    if (vec3d == null) {
-                        return false;
-                    } else {
-                        this.x = vec3d.x;
-                        this.y = vec3d.y;
-                        this.z = vec3d.z;
-                        return true;
-                    }
-                }
-            }
+        if (this.taskOwner.flockSize > 1) {
+            return false;
+        } else if (this.taskOwner.hasGroupLeader()) {
+            return true;
+        } else if (this.field_222740_c > 0) {
+            --this.field_222740_c;
+            return false;
+        } else {
+            this.field_222740_c = this.func_212825_a(this.taskOwner);
+            Predicate<BirdEntity> predicate = (p_212824_0_) -> {
+                return p_212824_0_.canGroupGrow() || !p_212824_0_.hasGroupLeader();
+            };
+            List<BirdEntity> list = this.taskOwner.world.getEntitiesWithinAABB(this.taskOwner.getClass(), this.taskOwner.getBoundingBox().grow(8.0D, 8.0D, 8.0D), predicate);
+            BirdEntity bird = list.stream().filter(BirdEntity::canGroupGrow).findAny().orElse(this.taskOwner);
+            bird.joinSquad(list.stream().filter((p_212823_0_) -> {
+                return !p_212823_0_.hasGroupLeader();
+            }));
+            return this.taskOwner.hasGroupLeader();
         }
-        return false;
     }
 
-    @Nullable
-    protected Vector3d getPosition() {
-        return RandomPositionGenerator.findRandomTargetBlockTowards(taskOwner, 1, 1, guardtofollow.getPositionVec());
-    }
-
+    @Override
     public boolean shouldContinueExecuting() {
-        return !this.taskOwner.getNavigator().noPath() && !this.taskOwner.isBeingRidden();
-    }
-
-    public void resetTask() {
-        this.taskOwner.getNavigator().clearPath();
-        super.resetTask();
+        return this.taskOwner.hasGroupLeader() && this.taskOwner.inRangeOfGroupLeader();
     }
 
     @Override
     public void startExecuting() {
-        this.taskOwner.getNavigator().tryMoveToEntityLiving(guardtofollow, 1.0D);
+        this.navigateTimer = 0;
+    }
+
+    @Override
+    public void resetTask() {
+        this.taskOwner.leaveGroup();
+    }
+
+    @Override
+    public void tick() {
+        if (--this.navigateTimer <= 0) {
+            this.navigateTimer = 10;
+            this.taskOwner.getNavigator().tryMoveToEntityLiving(taskOwner.flockLeader, 1.0D);
+        }
     }
 }

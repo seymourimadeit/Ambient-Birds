@@ -10,5 +10,5 @@ import tallestegg.ambientbirds.entity.BirdEntity;
 public class BirdEntityType {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, AmbientBirds.MODID);
 
-    public static final RegistryObject<EntityType<BirdEntity>> BIRD = ENTITIES.register("bird", () -> EntityType.Builder.create(BirdEntity::new, EntityClassification.MISC).size(0.9F, 0.9F).setShouldReceiveVelocityUpdates(true).build("ambientbirds:bird"));
+    public static final RegistryObject<EntityType<BirdEntity>> BIRD = ENTITIES.register("bird", () -> EntityType.Builder.create(BirdEntity::new, EntityClassification.MISC).size(0.9F, 0.9F).setShouldReceiveVelocityUpdates(true).build(AmbientBirds.MODID + ":bird"));
 }
