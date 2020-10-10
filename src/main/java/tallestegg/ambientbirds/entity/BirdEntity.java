@@ -45,8 +45,8 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     public void registerGoals() {
-        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 10.0D));
-        this.goalSelector.addGoal(1, new FlockGoal(this));
+        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new FlockGoal(this));
     }
 
     public BirdEntity leaderIncreaseSize(BirdEntity groupLeaderIn) {
