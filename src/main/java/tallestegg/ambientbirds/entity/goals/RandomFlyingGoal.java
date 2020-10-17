@@ -8,7 +8,7 @@ import net.minecraft.util.math.vector.Vector3d;
 public class RandomFlyingGoal extends RandomWalkingGoal {
 
     public RandomFlyingGoal(CreatureEntity p_i1648_1_, double p_i1648_2_) {
-        super(p_i1648_1_, p_i1648_2_);
+        super(p_i1648_1_, p_i1648_2_, 10);
     }
 
     @Override

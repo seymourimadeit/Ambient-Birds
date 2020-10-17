@@ -25,7 +25,8 @@ public class AmbientBirds {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        BirdEntityType.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ABEntityType.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ABItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -33,7 +34,7 @@ public class AmbientBirds {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(BirdEntityType.BIRD.get(), BirdRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ABEntityType.BIRD.get(), BirdRenderer::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -46,7 +47,7 @@ public class AmbientBirds {
     public static class RegistryEvents {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void imstuff(final RegistryEvent.Register<EntityType<?>> event) {
-            GlobalEntityTypeAttributes.put(BirdEntityType.BIRD.get(), BirdEntity.createAttributes().func_233813_a_());
+            GlobalEntityTypeAttributes.put(ABEntityType.BIRD.get(), BirdEntity.createAttributes().func_233813_a_());
         }
     }
 }

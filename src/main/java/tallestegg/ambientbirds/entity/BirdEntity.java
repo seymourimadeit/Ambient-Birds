@@ -24,6 +24,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import tallestegg.ambientbirds.ABEntityType;
 import tallestegg.ambientbirds.entity.goals.FlockGoal;
 import tallestegg.ambientbirds.entity.goals.RandomFlyingGoal;
 
@@ -39,14 +40,19 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
     }
 
     @Override
-    public AgeableEntity func_241840_a(ServerWorld arg0, AgeableEntity arg1) {
-        return null;
+    public BirdEntity func_241840_a(ServerWorld arg0, AgeableEntity arg1) {
+        BirdEntity bird = ABEntityType.BIRD.get().create(arg0);
+        return bird;
     }
 
     @Override
     public void registerGoals() {
-        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 1.0D));
+        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 10.0D));
         this.goalSelector.addGoal(2, new FlockGoal(this));
+    }
+    
+    public boolean onGround() {
+        return this.onGround;
     }
 
     public BirdEntity leaderIncreaseSize(BirdEntity groupLeaderIn) {
@@ -109,12 +115,7 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
 
         this.func_233629_a_(this, false);
     }
-    
-    public boolean isOnGround() {
-        return this.onGround;
-    }
 
-    // TODO : add something here
     @Override
     public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);

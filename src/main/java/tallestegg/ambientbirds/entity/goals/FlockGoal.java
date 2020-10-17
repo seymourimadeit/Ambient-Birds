@@ -39,7 +39,7 @@ public class FlockGoal extends Goal {
             bird.joinSquad(list.stream().filter((p_212823_0_) -> {
                 return !p_212823_0_.hasGroupLeader();
             }));
-            return this.taskOwner.hasGroupLeader();
+            return this.taskOwner.hasGroupLeader() && this.taskOwner.onGround();
         }
     }
 
@@ -62,7 +62,7 @@ public class FlockGoal extends Goal {
     public void tick() {
         if (--this.navigateTimer <= 0) {
             this.navigateTimer = 10;
-            this.taskOwner.getNavigator().tryMoveToEntityLiving(taskOwner.flockLeader, 1.0D);
+            this.taskOwner.getNavigator().tryMoveToEntityLiving(taskOwner.flockLeader, 10.0D);
         }
     }
 }
