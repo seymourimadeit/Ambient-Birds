@@ -12,7 +12,7 @@ public class ABEvents {
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof ParrotEntity) {
             ParrotEntity parrot = (ParrotEntity)event.getEntity();
-            parrot.goalSelector.addGoal(1, new RandomFlyingGoal(parrot, 1.0D));
+            parrot.goalSelector.addGoal(1, new RandomFlyingGoal(parrot, 10.0D));
         }
     }
 }

@@ -1,5 +1,6 @@
 package tallestegg.ambientbirds.entity;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,7 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
         this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 10.0D));
         this.goalSelector.addGoal(2, new FlockGoal(this));
     }
-    
+
     public boolean onGround() {
         return this.onGround;
     }
@@ -77,6 +78,18 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
         });
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (this.flockSize > 1 && this.world.rand.nextInt(200) == 1) {
+            List<BirdEntity> list = this.world.getEntitiesWithinAABB(this.getClass(), this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
+            if (list.size() <= 1) {
+                this.flockSize = 1;
+            }
+        }
+
+    }
+
     public boolean canGroupGrow() {
         return this.flockSize > 1;
     }
@@ -86,13 +99,13 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
     }
 
     @Override
-    public void travel(Vector3d p_213352_1_) {
+    public void travel(Vector3d travelVector) {
         if (this.isInWater()) {
-            this.moveRelative(0.02F, p_213352_1_);
+            this.moveRelative(0.02F, travelVector);
             this.move(MoverType.SELF, this.getMotion());
             this.setMotion(this.getMotion().scale((double) 0.8F));
         } else if (this.isInLava()) {
-            this.moveRelative(0.02F, p_213352_1_);
+            this.moveRelative(0.02F, travelVector);
             this.move(MoverType.SELF, this.getMotion());
             this.setMotion(this.getMotion().scale(0.5D));
         } else {
@@ -108,7 +121,7 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
                 f = this.world.getBlockState(ground).getSlipperiness(this.world, ground, this) * 0.91F;
             }
 
-            this.moveRelative(this.onGround ? 0.1F * f1 : 0.02F, p_213352_1_);
+            this.moveRelative(this.onGround ? 0.1F * f1 : 0.02F, travelVector);
             this.move(MoverType.SELF, this.getMotion());
             this.setMotion(this.getMotion().scale((double) f));
         }

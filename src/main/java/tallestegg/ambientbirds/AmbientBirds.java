@@ -13,8 +13,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import tallestegg.ambientbirds.client.renderer.BirdRenderer;
 import tallestegg.ambientbirds.entity.BirdEntity;
-import tallestegg.ambientbirds.renderer.BirdRenderer;
 
 @Mod(AmbientBirds.MODID)
 public class AmbientBirds {

@@ -1,4 +1,4 @@
-package tallestegg.ambientbirds.renderer;
+package tallestegg.ambientbirds.client.renderer;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.MobRenderer;
