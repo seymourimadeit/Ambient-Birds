@@ -3,7 +3,6 @@ package tallestegg.ambientbirds.entity.goals;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.goal.RandomWalkingGoal;
-import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import tallestegg.ambientbirds.entity.BirdEntity;
@@ -17,7 +16,7 @@ public class RandomFlyingGoal extends RandomWalkingGoal {
     @Override
     protected Vector3d getPosition() {
         Vector3d vector3d = creature.getLook(0.0F);
-        return RandomPositionGenerator.findAirTarget(this.creature, 50, 100, vector3d, ((float) Math.PI / 2F), 2, 1);
+        return RandomPositionGenerator.findGroundTarget(creature, 10, 7, -2, vector3d, (double) ((float) Math.PI / 2F));
     }
 
     @Override
@@ -25,7 +24,7 @@ public class RandomFlyingGoal extends RandomWalkingGoal {
         Vector3d vector3d = this.getPosition();
         if (vector3d == null)
             return;
-        creature.getNavigator().setPath(creature.getNavigator().getPathToPos(new BlockPos(vector3d), 1),  this.speed);
+        creature.getNavigator().setPath(creature.getNavigator().getPathToPos(new BlockPos(vector3d), 1), this.speed);
     }
 
     @Override

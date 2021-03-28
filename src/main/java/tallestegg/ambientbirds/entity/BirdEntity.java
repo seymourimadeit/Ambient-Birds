@@ -9,7 +9,6 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.MoverType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -48,7 +47,7 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
 
     @Override
     public void registerGoals() {
-        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 10.0D));
+        this.goalSelector.addGoal(1, new RandomFlyingGoal(this, 7.0D));
         this.goalSelector.addGoal(2, new FlockGoal(this));
     }
 
@@ -71,7 +70,7 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
     }
 
     public void joinSquad(Stream<BirdEntity> p_212810_1_) {
-        p_212810_1_.limit((long) (34 - this.flockSize)).filter((flockController) -> {
+        p_212810_1_.limit((long) (69 - this.flockSize)).filter((flockController) -> {
             return flockController != this;
         }).forEach((p_212804_1_) -> {
             p_212804_1_.leaderIncreaseSize(this);
@@ -95,38 +94,12 @@ public class BirdEntity extends AnimalEntity implements IFlyingAnimal {
     }
 
     public boolean inRangeOfGroupLeader() {
-        return this.getDistanceSq(this.flockLeader) <= 121.0D;
+        return this.getDistance(this.flockLeader) <= 121.0D;
     }
 
     @Override
     public void travel(Vector3d travelVector) {
-        if (this.isInWater()) {
-            this.moveRelative(0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale((double) 0.8F));
-        } else if (this.isInLava()) {
-            this.moveRelative(0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale(0.5D));
-        } else {
-            BlockPos ground = new BlockPos(this.getPosX(), this.getPosY() - 1.0D, this.getPosZ());
-            float f = 0.91F;
-            if (this.onGround) {
-                f = this.world.getBlockState(ground).getSlipperiness(this.world, ground, this) * 0.91F;
-            }
-
-            float f1 = 0.16277137F / (f * f * f);
-            f = 0.91F;
-            if (this.onGround) {
-                f = this.world.getBlockState(ground).getSlipperiness(this.world, ground, this) * 0.91F;
-            }
-
-            this.moveRelative(this.onGround ? 0.1F * f1 : 0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale((double) f));
-        }
-
-        this.func_233629_a_(this, false);
+        super.travel(travelVector);
     }
 
     @Override
